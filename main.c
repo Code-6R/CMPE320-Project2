@@ -31,13 +31,11 @@ FILE *fileHandler(int argc, char *argv[]) {
 
 int main(int argc, char *argv[]) {
     int j = 0, k = 0;
-    int count[10] = {0};
-    char *line = NULL, chr[10] = {};
+    int count[1000000] = {0};
+    char *line = NULL, chr[1000000] = {};
     FILE *input = fileHandler(argc, argv);
     size_t size = 0;
     while (getline(&line, &size, input) != -1) {
-        if (line[strlen(line) - 1] == '\n')
-            line[strlen(line) - 1] = '\0';
         int charPos = 0;
         while (line[charPos] != '\0') {
             j = charPos;
@@ -62,5 +60,6 @@ int main(int argc, char *argv[]) {
         k++;
     }
     fclose(input);
+    remove("combined.txt");
     return 0;
 }
