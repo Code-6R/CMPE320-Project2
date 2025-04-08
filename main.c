@@ -30,9 +30,10 @@ FILE *fileHandler(int argc, char *argv[]) {
 }
 
 int main(int argc, char *argv[]) {
-    int j = 0, k = 0;
-    int count[1000000] = {0};
-    char *line = NULL, chr[1000000] = {};
+    int j = 0, k = 0, n = 1;
+    int *count = calloc(n, sizeof(int));
+    char *chr = malloc(sizeof(char) * n);
+    char *line = NULL;
     FILE *input = fileHandler(argc, argv);
     size_t size = 0;
     while (getline(&line, &size, input) != -1) {
@@ -46,6 +47,15 @@ int main(int argc, char *argv[]) {
             if (chr[k] == chr[k - 1] && k > 0) {
                 count[k - 1] += count[k];
                 k--;
+                n--;
+            }
+            n++;
+            count = realloc(count, sizeof(int) * n);
+            chr = realloc(chr, sizeof(char) * n);
+            if (count == NULL || chr == NULL) {
+                free(count);
+                free(chr);
+                exit(EXIT_FAILURE);
             }
             charPos = j;
             k++;
@@ -60,6 +70,8 @@ int main(int argc, char *argv[]) {
         k++;
     }
     fclose(input);
+    free(count);
+    free(chr);
     remove("combined.txt");
     return 0;
 }
