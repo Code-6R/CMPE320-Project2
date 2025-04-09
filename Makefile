@@ -1,6 +1,5 @@
-wzip: main.o
-	gcc -o wzip main.o
+wzip: wzip.o
+	gcc -o wzip wzip.o
 
-main.o: main.c
-	gcc -c main.c
-
+wzip.o: wzip.c
+	gcc -c wzip.c

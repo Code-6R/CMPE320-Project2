@@ -30,7 +30,7 @@ FILE *fileHandler(int argc, char *argv[]) {
 }
 
 int main(int argc, char *argv[]) {
-    int j = 0, k = 0, n = 1;
+    int j = 0, k = 0, n = 1000;
     int *count = calloc(n, sizeof(int));
     char *chr = malloc(sizeof(char) * n);
     char *line = NULL;
@@ -44,17 +44,18 @@ int main(int argc, char *argv[]) {
             while (chr[k] == line[j])
                 j++;
             count[k] = j - charPos;
-            if (chr[k] == chr[k - 1] && k > 0) {
+            if (chr[k] == chr[k - 1]) {
                 count[k - 1] += count[k];
                 k--;
                 n--;
             }
             n++;
-            count = realloc(count, sizeof(int) * n);
-            chr = realloc(chr, sizeof(char) * n);
+            /*My friend Kyle said I should avoid reallocating too often*/
+            if (n % 1000 == 0) {
+                count = realloc(count, sizeof(int) * n);
+                chr = realloc(chr, sizeof(char) * n);
+            }
             if (count == NULL || chr == NULL) {
-                free(count);
-                free(chr);
                 exit(EXIT_FAILURE);
             }
             charPos = j;
@@ -65,8 +66,8 @@ int main(int argc, char *argv[]) {
     chr[k] = '\0';
     k = 0;
     while (chr[k] != '\0') {
-        fwrite(&count[k], 4, 1, stdout);
-        fprintf(stdout, "%c", chr[k]);
+        fwrite(&count[k], sizeof(int), 1, stdout);
+        fwrite(&chr[k], sizeof(char), 1, stdout);
         k++;
     }
     fclose(input);
